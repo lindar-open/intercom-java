@@ -3,6 +3,8 @@ package io.intercom.api;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.List;
+
 @SuppressWarnings("UnusedDeclaration")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ConversationPart extends TypedData {
@@ -32,7 +34,10 @@ public class ConversationPart extends TypedData {
     private long updatedAt;
 
     @JsonProperty("notified_at")
-    private long NotifiedAt;
+    private long notifiedAt;
+
+    @JsonProperty("attachments")
+    private List<Attachment> attachments;
 
     public ConversationPart() {
     }
@@ -70,7 +75,11 @@ public class ConversationPart extends TypedData {
     }
 
     public long getNotifiedAt() {
-        return NotifiedAt;
+        return notifiedAt;
+    }
+
+    public List<Attachment> getAttachments() {
+        return attachments;
     }
 
     @Override
@@ -80,7 +89,7 @@ public class ConversationPart extends TypedData {
 
         ConversationPart that = (ConversationPart) o;
 
-        if (NotifiedAt != that.NotifiedAt) return false;
+        if (notifiedAt != that.notifiedAt) return false;
         if (createdAt != that.createdAt) return false;
         if (updatedAt != that.updatedAt) return false;
         if (assignedTo != null ? !assignedTo.equals(that.assignedTo) : that.assignedTo != null) return false;
@@ -104,7 +113,7 @@ public class ConversationPart extends TypedData {
         result = 31 * result + (assignedTo != null ? assignedTo.hashCode() : 0);
         result = 31 * result + (int) (createdAt ^ (createdAt >>> 32));
         result = 31 * result + (int) (updatedAt ^ (updatedAt >>> 32));
-        result = 31 * result + (int) (NotifiedAt ^ (NotifiedAt >>> 32));
+        result = 31 * result + (int) (notifiedAt ^ (notifiedAt >>> 32));
         return result;
     }
 
@@ -119,7 +128,7 @@ public class ConversationPart extends TypedData {
             ", assignedTo=" + assignedTo +
             ", createdAt=" + createdAt +
             ", updatedAt=" + updatedAt +
-            ", NotifiedAt=" + NotifiedAt +
+            ", notifiedAt=" + notifiedAt +
             "} " + super.toString();
     }
 }

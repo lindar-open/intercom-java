@@ -99,7 +99,7 @@ class Version {
     originalVersion = versionValue
     if (originalVersion.endsWith('-SNAPSHOT')) {
       status = 'integration'
-      thisVersion = originalVersion.substring(0, originalVersion.length() - 'SNAPSHOT'.length()) + getTimestamp()
+      thisVersion = versionValue /*originalVersion.substring(0, originalVersion.length() - 'SNAPSHOT'.length()) + getTimestamp()*/
       repo = "http://nexus-lindar.mircloud.host/content/repositories/lindar-maven-repo/"
     } else {
       status = 'release'
