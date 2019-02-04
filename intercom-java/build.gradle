@@ -4,7 +4,7 @@ import java.text.SimpleDateFormat
 final publicationVersion = new Version(version)
 def rawVersion = version
 
-group = 'io.intercom'
+group = 'com.lindar'
 version = publicationVersion
 status = version.status
 ext.publish = true
@@ -27,6 +27,8 @@ artifacts {
 publishing {
   publications {
     mavenJava(MavenPublication) {
+      artifactId = 'intercom-java'
+      version = version
       from components.java
 
       artifact sourcesJar {
@@ -36,35 +38,21 @@ publishing {
       artifact javadocJar {
         classifier "javadoc"
       }
+
+      pom {
+        name = 'Intercom Java Client'
+        description = 'A client for intercom written in java'
+        url = 'https://github.com/intercom/intercom-java'
+      }
     }
   }
-}
-
-
-bintray {
-  // gradle apslodes if the bintray* props aren't found and we never run this task in circle
-  if (System.getenv('release') != null) {
-    user = System.getenv('BINTRAY_USER')
-    key = System.getenv('BINTRAY_KEY')
-  }
-  publications = ['mavenJava']
-  dryRun = false
-  publish = project.publish
-  pkg {
-    repo = 'intercom-maven'
-    userOrg = 'intercom'
-    name = 'intercom-java'
-    desc = 'Java bindings for the Intercom API'
-    websiteUrl = 'https://github.com/intercom/intercom-java'
-    issueTrackerUrl = 'https://github.com/intercom/intercom-java/issues'
-    vcsUrl = 'https://github.com/intercom/intercom-java.git'
-    licenses = ['Apache-2.0']
-    labels = ['intercom', 'java', 'api']
-    publicDownloadNumbers = true
-    //noinspection GroovyAssignabilityCheck
-    version {
-      name = publicationVersion
-      vcsTag = publicationVersion
+  repositories {
+    maven {
+      credentials {
+        username = mavenUser
+        password = mavenPassword
+      }
+      url version.repo
     }
   }
 }
@@ -103,6 +91,7 @@ class Version {
   String originalVersion
   String thisVersion
   String status
+  String repo
   Date buildTime
 
   Version(String versionValue) {
@@ -111,9 +100,11 @@ class Version {
     if (originalVersion.endsWith('-SNAPSHOT')) {
       status = 'integration'
       thisVersion = originalVersion.substring(0, originalVersion.length() - 'SNAPSHOT'.length()) + getTimestamp()
+      repo = "http://nexus-lindar.mircloud.host/content/repositories/lindar-maven-repo/"
     } else {
       status = 'release'
       thisVersion = versionValue
+      repo = "http://nexus-lindar.mircloud.host/content/repositories/lindar-maven-repo-release"
     }
   }
 
